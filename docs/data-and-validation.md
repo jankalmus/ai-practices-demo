@@ -34,12 +34,8 @@ Amounts are stored as **integer cents** (`amountCents`). User input is euros, co
 
 - ❌ Never store or sum floating-point euro values.
 
-The decision to represent money as integer cents is one of the oldest and most universal conventions in financial software, and it exists because IEEE 754 floating-point arithmetic cannot exactly represent most decimal fractions. The canonical demonstration — `0.1 + 0.2 !== 0.3` — is not a curiosity; it is a category of production incident. Currency-handling bugs are among the most reputationally expensive defects a financial application can ship, and they are entirely preventable by the discipline codified here. Treat any floating-point euro value found in the codebase as a defect to be reported, regardless of whether it has yet produced an observable error.
-
 ## Dates
 
 Dates are **strings**: `YYYY-MM-DD` for transactions, `YYYY-MM` for months. Comparison/filtering uses string operations (`localeCompare`, `startsWith`) — this is intentional; ISO dates sort lexicographically. Formatting for display goes through `formatDate` / `monthLabel`.
 
 - ❌ Don't introduce `Date` objects into stored data or filters; convert at the display edge only.
-
-The string-based date representation deserves a word of justification, since it surprises engineers accustomed to rich date libraries. JavaScript `Date` objects carry timezone semantics that this application does not need and cannot benefit from: a transaction dated "2026-06-12" is a calendar date, not an instant in time, and modeling it as an instant invites a whole family of off-by-one-day bugs around midnight and DST transitions. ISO 8601 calendar dates sort lexicographically by construction, which makes string comparison not a hack but the formally correct operation. The display edge is the only place where locale-aware formatting belongs.

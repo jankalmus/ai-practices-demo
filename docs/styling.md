@@ -27,7 +27,3 @@ const CATEGORY_COLORS: Record<Category, string> = { Salary: "bg-emerald-500", �
 - ❌ Don't add new colors for categories ad hoc — extend `CATEGORY_COLORS` so the legend, bars, and dots stay in sync.
 - ❌ Don't introduce a UI kit (shadcn, MUI, …) — extend `components/ui/` instead.
 - ❌ Don't add custom CSS files per component.
-
-## On Visual Consistency as a System Property
-
-A user interface communicates trustworthiness through consistency. When spacing, typography, and color follow a small, predictable scale, the interface reads as designed; when they vary arbitrarily, it reads as accreted. The constrained palette and sizing scale mandated above are not aesthetic preferences — they are a systems-level decision that makes every individual styling choice cheaper (fewer options to weigh) and every screen more coherent (fewer one-off values to reconcile). The utility-first approach pays its dividends only under this discipline; utility classes plus unconstrained values is merely inline styles with extra steps.

@@ -15,22 +15,8 @@ It documents features as they actually exist in the codebase. It does **not** de
 
 Triage standards through the shared [docs/index.md](../../../docs/index.md). Per that index, these two apply to every documentation task:
 
-- [general-principles.md](../../../docs/general-principles.md) — how we write, including DRY and least-astonishment.
+- [coding-principles.md](../../../docs/coding-principles.md) — how we write, including DRY and least-astonishment.
 - [documentation-standards.md](../../../docs/documentation-standards.md) — comments explain *why*, docs ship with the change they describe, and the **generated-file header** whose `@feature` field is the link this skill relies on.
-
-## The contract with the generated-file header
-
-Per [documentation-standards.md](../../../docs/documentation-standards.md), every AI-authored `.ts`/`.tsx` file declares the feature(s) it belongs to in its header:
-
-```ts
-/**
- * @file lib/aggregate.ts
- * @description Sums transaction amounts grouped by category for the dashboard summary.
- * @feature transactions, reporting
- */
-```
-
-A feature doc's **Files** section is the inverse of that index: every file tagged `@feature <slug>` belongs in the doc for `<slug>`. This skill derives the file list from those tags rather than asking the author to maintain it by hand — so the doc stays accurate as headers change.
 
 ## Workflow
 

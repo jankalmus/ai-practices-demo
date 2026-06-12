@@ -1,8 +1,6 @@
-# Next.js App Router
+# Next.js guidelines
 
-## Critical Platform Notice
-
-**This is NOT the Next.js you know.** This project runs **Next.js 16.2.9** — a version with breaking changes relative to what AI assistants may know from training data. APIs, conventions, and file structure may all differ. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices. When unsure, read the bundled guides in `node_modules/next/dist/docs/01-app/01-getting-started/` (especially `05-server-and-client-components.md`, `07-mutating-data.md`, `08-caching.md`, `15-route-handlers.md`).
+**This is NOT the Next.js you know.** This project runs **Next.js 16.2.9** — a version with breaking changes relative to what AI assistants may know from training data. APIs, conventions, and file structure may all differ. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code or use Context7 MCP if available to confirm existinf cuntcionality.
 
 ## Server Components by default
 

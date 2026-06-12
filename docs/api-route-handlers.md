@@ -29,7 +29,3 @@ Errors are always `{ error: string, details? }` — don't invent new envelope sh
 - ❌ Don't return raw Zod errors — flatten to `fieldErrors`.
 - ❌ Don't access the store's internals or fetch other internal routes from a handler.
 - ❌ Don't add authentication/middleware ad hoc — that's a team-level decision.
-
-## On API Contracts and Their Consumers
-
-An HTTP API is a promise made to parties you cannot see. Unlike internal function signatures, which the compiler renegotiates on every build, an API's contract is enforced by nothing but discipline: the moment a handler ships, some consumer somewhere may begin depending on its exact status codes, error envelope, and field names. Hyrum's Law tells us that with sufficient users, every observable behavior of an interface becomes load-bearing. This is why the error envelope is standardized and non-negotiable, why status codes follow their RFC-defined semantics precisely, and why "it's just an internal API" is not an exemption — internal APIs have a way of becoming external ones without anyone scheduling a meeting about it.

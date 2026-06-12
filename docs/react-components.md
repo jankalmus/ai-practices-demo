@@ -18,7 +18,7 @@ export function TransactionForm({ defaultDate }: { defaultDate: string }) { … 
 export function TransactionForm(props) { … }
 ```
 
-## Server vs client split
+## Server vs. client split
 
 - Server components own data access (call `lib/store.ts` / `lib/aggregate.ts` directly) and pass plain serializable props down.
 - Client components (`'use client'`) are leaves that own interactivity only. Example: `transaction-form.tsx` uses `useActionState` + `useState`; the page that renders it stays a server component.

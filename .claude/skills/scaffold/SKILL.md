@@ -11,7 +11,7 @@ This skill generates a new App Router page that **already conforms** to our stan
 
 Triage standards through the shared [docs/index.md](../../../docs/index.md). Per that index, these two apply to every code-generating task, no triage:
 
-- [general-principles.md](../../../docs/general-principles.md)
+- [coding-principles.md](../../../docs/coding-principles.md)
 - [documentation-standards.md](../../../docs/documentation-standards.md) — including the **generated-file header** that every AI-authored `.ts`/`.tsx` file must start with.
 
 ## Then read only what the feature needs
@@ -20,10 +20,10 @@ Don't read every recipe. Decide what the page actually does, then open the match
 
 | The page needs to… | Read | Project docs it leans on |
 | --- | --- | --- |
-| **Read & display** data (the page itself) | [references/page-server-component.md](references/page-server-component.md) | `nextjs`, `react-components`, `styling` |
-| Work with a **data shape the store doesn't have yet** | [references/data-layer.md](references/data-layer.md) | `data-and-validation`, `typescript`, `testing` |
-| **Create / edit / delete** data from the UI | [references/server-action-mutation.md](references/server-action-mutation.md) | `nextjs`, `react-components`, `security` |
-| Expose data to **external / REST** clients | [references/route-handler.md](references/route-handler.md) | `api-route-handlers`, `security` |
+| **Read & display** data (the page itself) | [page-server-component.md](assets/page-server-component.md) | `nextjs`, `react-components`, `styling` |
+| Work with a **data shape the store doesn't have yet** | [data-layer.md](assets/data-layer.md) | `data-and-validation`, `typescript`, `testing` |
+| **Create / edit / delete** data from the UI | [server-action-mutation.md](assets/server-action-mutation.md) | `nextjs`, `react-components`, `security` |
+| Expose data to **external / REST** clients | [route-handler.md](assets/route-handler.md) | `api-route-handlers`, `security` |
 
 Most pages need the first row, and often the second. The mutation and route-handler rows are additive — pull them in only when the feature calls for them.
 
