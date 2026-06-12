@@ -16,7 +16,8 @@ Use this exact shape:
  * @file lib/aggregate.ts
  * @generated 2026-06-13
  * @model claude-opus-4-8
- * @prompt Add a helper that sums transaction amounts grouped by category.
+ * @description Sums transaction amounts grouped by category for the dashboard summary.
+ * @feature transactions, reporting
  */
 ```
 
@@ -25,7 +26,8 @@ Field spec:
 - `@file` — repo-relative path to this file (e.g. `lib/aggregate.ts`).
 - `@generated` — the generation date as an ISO `YYYY-MM-DD` string, consistent with the project's string-date convention (see [data-and-validation.md](./data-and-validation.md)).
 - `@model` — the model id that authored the file (e.g. `claude-opus-4-8`).
-- `@prompt` — a one-line overview of the request that produced the file. Summarize the intent; do not paste the verbatim transcript.
+- `@description` — a one-line statement of the file's **purpose**: what it does and why it exists. Describe the file as it now stands, not the request that produced it.
+- `@feature` — a CSV of the business feature(s) this file belongs to, by slug. Each slug must correspond to a feature documented in [features/](./features/index.md) (authored by the `document` skill). A file's `@feature` tags are the machine-readable inverse of a feature doc's *Files* section. If the file genuinely belongs to no business feature (pure infrastructure or tooling), use `@feature none`.
 
 Placement and rules:
 
@@ -36,7 +38,8 @@ Placement and rules:
    * @file components/transaction-form.tsx
    * @generated 2026-06-13
    * @model claude-opus-4-8
-   * @prompt Build the leaf client form that submits to the addTransaction server action.
+   * @description Leaf client form that submits new transactions to the addTransaction server action.
+   * @feature transactions
    */
   "use client";
 
@@ -45,5 +48,5 @@ Placement and rules:
   ```
 
 - The rule applies only to **model-generated** `.ts`/`.tsx` files. Human-authored files are out of scope.
-- When a model **substantially edits** an existing generated file, update `@generated` and `@prompt` to reflect the latest change rather than adding a second header block.
+- When a model **substantially edits** an existing generated file, update `@generated`, `@description`, and `@feature` to reflect the file as it now stands rather than adding a second header block.
 - The header is a comment block; it has no runtime effect and is ignored by the TypeScript compiler, ESLint, and bundler.
