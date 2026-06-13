@@ -42,11 +42,11 @@ Refer to the format of the pull request in [format.md](./references/format.md)
 - Bullet points describe *what* changed, not *how*
 - Do not exceed 6 bullet points even if there are more changes
 
-### 5 — Confirm before creating (interactive runs only)
+### 5 — Confirm before creating (unless authorized for the session)
 
-This step **only applies when the skill is run interactively** (a user has invoked `/pull-request` directly). If the skill is being executed as part of an automated/agentic flow — i.e. another agent or workflow triggered it without a user in the loop — **skip this step** and proceed directly to creation.
+**Skip this step when PR creation is already authorized for the session** — i.e. the development-loop finalize step is running after an approved plan or the user's up-front *yes* (see "The development loop" in [CLAUDE.md](../../../CLAUDE.md)). In that case proceed directly to creation.
 
-When interactive, show the proposed title and description, then use the **AskUserQuestion** tool to confirm before pushing and opening the PR. Ask a single question — e.g. "Ready to push `{branch}` and create this PR against `main`?" — with these options:
+Otherwise — e.g. a user invoked `/pull-request` directly with no standing authorization — show the proposed title and description, then use the **AskUserQuestion** tool to confirm before pushing and opening the PR. Ask a single question — e.g. "Ready to push `{branch}` and create this PR against `main`?" — with these options:
 
 - **Yes, create it** → continue to step 6.
 - **Edit first** → incorporate the user's changes, then ask again with AskUserQuestion.
