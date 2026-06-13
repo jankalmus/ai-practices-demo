@@ -1,6 +1,6 @@
 ---
 name: verify
-description: The quality gate of the development loop — runs the build, lint, and tests locally so you find broken builds, type errors, lint violations, and failing tests yourself, before they reach code-review or CI where they are far more expensive to unwind. Run it after every code change, and again before moving on to the code-review skill, committing, or opening a PR. Do not describe a change as working, or treat it as done, until you have actually run these checks and watched all three pass — a change that has not been verified is only assumed to work, not known to.
+description: The quality gate of the development loop — runs the build, lint, and tests locally so you find broken builds, type errors, lint violations, and failing tests yourself, before they reach code-review or CI where they are far more expensive to unwind. Run it after every code change, and again before moving on to the code-reviewer subagent, committing, or opening a PR. Do not describe a change as working, or treat it as done, until you have actually run these checks and watched all three pass — a change that has not been verified is only assumed to work, not known to.
 tools: Bash
 ---
 

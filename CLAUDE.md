@@ -11,7 +11,7 @@ Code is not done the moment it's written. Every code change runs through a short
 
 1. **Code** — implement the change, following the standards indexed in [docs/index.md](./docs/index.md).
 2. **Verify** — run the `verify` skill (build, lint, test). This is what tells you the app still compiles, type-checks, and passes its tests; skipping it means you're only guessing the change works.
-3. **Code-review** — run the `code-review` skill. It reviews the change against the standards indexed in [docs/index.md](./docs/index.md), reading the diff fresh rather than trusting the assumptions you made while writing the code, and reports its findings back to you.
+3. **Code-review** — delegate to the `code-reviewer` **subagent** (via the Agent tool, `subagent_type: code-reviewer`) — **not** the similarly-named global `code-review` skill, which is a different, unrelated tool. It reviews the change against the standards in its own fresh context window, so the review isn't coloured by the assumptions you made while writing the code. It reports findings back to you.
 4. **Repeat** — if verify fails, or the review returns any 🔴 blocking finding, go back to step 1 and address it, then run the cycle again.
 
 The change is done only when verify is green **and** the review reports no blocking findings. Do not announce a change as complete, commit it, or open a PR before then.
