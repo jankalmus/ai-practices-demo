@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   availableMonths,
   byCategory,
+  categoryStats,
   formatCents,
   formatDate,
   monthLabel,
@@ -56,6 +57,53 @@ describe("byCategory", () => {
 
   it("returns an empty list when there is no data", () => {
     expect(byCategory([], "income")).toEqual([]);
+  });
+});
+
+describe("categoryStats", () => {
+  it("returns all zeroes/nulls for empty transactions", () => {
+    expect(categoryStats([], "Food")).toEqual({
+      avgTransactionsPerMonth: 0,
+      averageAmountCents: 0,
+      lastTransactionDate: null,
+      minAmountCents: null,
+      maxAmountCents: null,
+    });
+  });
+
+  it("computes stats for a single transaction", () => {
+    const stats = categoryStats(fixture, "Housing");
+    expect(stats).toEqual({
+      avgTransactionsPerMonth: 1,
+      averageAmountCents: 125_000,
+      lastTransactionDate: "2026-06-03",
+      minAmountCents: 125_000,
+      maxAmountCents: 125_000,
+    });
+  });
+
+  it("computes stats for multiple transactions in same month", () => {
+    const stats = categoryStats(fixture, "Food");
+    expect(stats.avgTransactionsPerMonth).toBe(2);
+    expect(stats.averageAmountCents).toBe(7_850);
+    expect(stats.minAmountCents).toBe(7_500);
+    expect(stats.maxAmountCents).toBe(8_200);
+  });
+
+  it("finds the most recent transaction date", () => {
+    const stats = categoryStats(fixture, "Food");
+    expect(stats.lastTransactionDate).toBe("2026-06-13");
+  });
+
+  it("calculates frequency only across months with transactions", () => {
+    const stats = categoryStats(fixture, "Transport");
+    expect(stats.avgTransactionsPerMonth).toBe(1);
+  });
+
+  it("returns null for min/max when no transactions", () => {
+    const stats = categoryStats([], "Food");
+    expect(stats.minAmountCents).toBeNull();
+    expect(stats.maxAmountCents).toBeNull();
   });
 });
 

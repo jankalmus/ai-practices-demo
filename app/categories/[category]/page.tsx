@@ -1,50 +1,63 @@
-import Link from "next/link";
+/**
+ * @file app/categories/[category]/page.tsx
+ * @generated 2026-06-14
+ * @model claude-sonnet-4-6
+ * @description Detail page for a single expense category, showing filtered transactions and all-time statistics.
+ * @feature category-detail
+ */
 
-import { CategoryBreakdown } from "@/components/category-breakdown";
-import { SummaryCards } from "@/components/summary-cards";
-import { TransactionForm } from "@/components/transaction-form";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
+import { CategoryStatsPanel } from "@/components/category-stats";
 import { TransactionList } from "@/components/transaction-list";
+import { CategoryDot } from "@/components/ui";
 import {
   availableMonths,
+  categoryStats,
   currentMonth,
   monthLabel,
-  summarize,
-  todayIsoDate,
 } from "@/lib/aggregate";
+import { EXPENSE_CATEGORIES } from "@/lib/categories";
 import { listFiltersSchema } from "@/lib/schemas";
 import { listTransactions } from "@/lib/store";
 
-// The store is mutable in-process memory — never prerender this page.
 export const dynamic = "force-dynamic";
 
-function monthHref(month: string, type?: "income" | "expense") {
+function monthHref(category: string, month: string, type?: "income" | "expense") {
   const params = new URLSearchParams({ month });
   if (type) params.set("type", type);
-  return `/?${params.toString()}`;
+  return `/categories/${category}?${params.toString()}`;
 }
 
-export default async function Home({
+export default async function CategoryPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ category: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const params = await searchParams;
+  const { category: categoryParam } = await params;
+
+  if (!EXPENSE_CATEGORIES.includes(categoryParam as never)) {
+    notFound();
+  }
+
+  const category = categoryParam as typeof EXPENSE_CATEGORIES[number];
+
+  const sp = await searchParams;
   const parsed = listFiltersSchema.safeParse({
-    type: typeof params.type === "string" ? params.type : undefined,
-    month: typeof params.month === "string" ? params.month : undefined,
+    month: typeof sp.month === "string" ? sp.month : undefined,
   });
   const filters = parsed.success ? parsed.data : {};
 
-  const months = availableMonths(listTransactions());
+  const allTransactions = listTransactions();
+  const months = availableMonths(allTransactions);
   const month = filters.month ?? months[0] ?? currentMonth();
 
-  const monthTransactions = listTransactions({ month });
-  const visibleTransactions = filters.type
-    ? monthTransactions.filter((tx) => tx.type === filters.type)
-    : monthTransactions;
-  const summary = summarize(monthTransactions);
+  const categoryTransactions = listTransactions({ month, category });
+  const stats = categoryStats(allTransactions, category);
 
-  // months is sorted newest first
   const monthIndex = months.indexOf(month);
   const olderMonth = monthIndex === -1 ? undefined : months[monthIndex + 1];
   const newerMonth = monthIndex > 0 ? months[monthIndex - 1] : undefined;
@@ -58,11 +71,17 @@ export default async function Home({
     <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6 lg:py-12">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2.5">
-            <span className="flex size-8 items-center justify-center rounded-lg bg-emerald-600 font-mono text-sm font-bold text-white">
-              L
-            </span>
-            <h1 className="text-xl font-semibold tracking-tight">Ledger</h1>
+          <div className="flex items-center gap-2">
+            <Link
+              href={`/?month=${month}`}
+              className="rounded-md px-2 py-1 text-sm text-zinc-600 transition hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+            >
+              ← Back
+            </Link>
+            <div className="flex items-center gap-2">
+              <CategoryDot category={category} className="size-4" />
+              <h1 className="text-xl font-semibold tracking-tight">{category}</h1>
+            </div>
           </div>
           <p className="mt-2 text-sm text-zinc-500">
             {monthLabel(month)} overview
@@ -75,7 +94,7 @@ export default async function Home({
         >
           {olderMonth ? (
             <Link
-              href={monthHref(olderMonth, filters.type)}
+              href={monthHref(category, olderMonth)}
               aria-label="Previous month"
               className={navLinkClass}
             >
@@ -91,7 +110,7 @@ export default async function Home({
           </span>
           {newerMonth ? (
             <Link
-              href={monthHref(newerMonth, filters.type)}
+              href={monthHref(category, newerMonth)}
               aria-label="Next month"
               className={navLinkClass}
             >
@@ -106,26 +125,18 @@ export default async function Home({
       </header>
 
       <main className="mt-8">
-        <SummaryCards summary={summary} />
-
-        <div className="mt-6 grid items-start gap-6 lg:grid-cols-3">
+        <div className="grid items-start gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2">
             <TransactionList
-              transactions={visibleTransactions}
-              activeType={filters.type}
+              transactions={categoryTransactions}
               month={month}
             />
           </div>
-          <div className="space-y-6">
-            <CategoryBreakdown transactions={monthTransactions} month={month} />
-            <TransactionForm defaultDate={todayIsoDate()} />
+          <div>
+            <CategoryStatsPanel stats={stats} category={category} />
           </div>
         </div>
       </main>
-
-      <footer className="mt-10 text-center text-xs text-zinc-400 dark:text-zinc-600">
-        Demo app — data lives in server memory and resets on restart.
-      </footer>
     </div>
   );
 }

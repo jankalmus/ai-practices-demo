@@ -20,6 +20,49 @@ export function summarize(transactions: Transaction[]): Summary {
   return { incomeCents, expenseCents, balanceCents: incomeCents - expenseCents };
 }
 
+export type CategoryStats = {
+  avgTransactionsPerMonth: number;
+  averageAmountCents: number;
+  lastTransactionDate: string | null;
+  minAmountCents: number | null;
+  maxAmountCents: number | null;
+};
+
+export function categoryStats(
+  allTransactions: Transaction[],
+  category: Category,
+): CategoryStats {
+  const txs = allTransactions.filter((tx) => tx.category === category);
+
+  if (txs.length === 0) {
+    return {
+      avgTransactionsPerMonth: 0,
+      averageAmountCents: 0,
+      lastTransactionDate: null,
+      minAmountCents: null,
+      maxAmountCents: null,
+    };
+  }
+
+  const categoryMonths = [...new Set(txs.map((tx) => tx.date.slice(0, 7)))];
+  const totalAmountCents = txs.reduce((sum, tx) => sum + tx.amountCents, 0);
+  const amounts = txs.map((tx) => tx.amountCents);
+
+  // Sort by date descending to find the most recent transaction
+  const sortedByDate = [...txs].sort((a, b) =>
+    b.date.localeCompare(a.date),
+  );
+
+  return {
+    avgTransactionsPerMonth:
+      categoryMonths.length === 0 ? 0 : txs.length / categoryMonths.length,
+    averageAmountCents: Math.round(totalAmountCents / txs.length),
+    lastTransactionDate: sortedByDate[0]?.date ?? null,
+    minAmountCents: Math.min(...amounts),
+    maxAmountCents: Math.max(...amounts),
+  };
+}
+
 export type CategoryTotal = {
   category: Category;
   totalCents: number;

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { Card, CategoryDot } from "@/components/ui";
 import { byCategory, formatCents } from "@/lib/aggregate";
 import { CATEGORY_COLORS } from "@/lib/categories";
@@ -5,8 +7,10 @@ import type { Transaction } from "@/lib/schemas";
 
 export function CategoryBreakdown({
   transactions,
+  month,
 }: {
   transactions: Transaction[];
+  month: string;
 }) {
   const rows = byCategory(transactions, "expense");
 
@@ -20,21 +24,26 @@ export function CategoryBreakdown({
         <ul className="mt-5 space-y-4">
           {rows.map((row) => (
             <li key={row.category}>
-              <div className="flex items-baseline justify-between gap-2 text-sm">
-                <span className="flex items-center gap-2">
-                  <CategoryDot category={row.category} className="size-2" />
-                  {row.category}
-                </span>
-                <span className="font-mono text-xs tabular-nums text-zinc-500">
-                  {formatCents(row.totalCents)}
-                </span>
-              </div>
-              <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
-                <div
-                  className={`h-full rounded-full ${CATEGORY_COLORS[row.category]}`}
-                  style={{ width: `${Math.max(2, Math.round(row.share * 100))}%` }}
-                />
-              </div>
+              <Link
+                href={`/categories/${row.category}?month=${month}`}
+                className="group block rounded-md transition hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+              >
+                <div className="flex items-baseline justify-between gap-2 px-1 py-1 text-sm">
+                  <span className="flex items-center gap-2">
+                    <CategoryDot category={row.category} className="size-2" />
+                    <span className="group-hover:underline">{row.category}</span>
+                  </span>
+                  <span className="font-mono text-xs tabular-nums text-zinc-500">
+                    {formatCents(row.totalCents)}
+                  </span>
+                </div>
+                <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
+                  <div
+                    className={`h-full rounded-full ${CATEGORY_COLORS[row.category]}`}
+                    style={{ width: `${Math.max(2, Math.round(row.share * 100))}%` }}
+                  />
+                </div>
+              </Link>
             </li>
           ))}
         </ul>
