@@ -1,3 +1,11 @@
+/**
+ * @file lib/schemas.ts
+ * @updated 2026-06-15
+ * @model claude-sonnet-4-6
+ * @description Zod schemas and derived types for all external input boundaries.
+ * @feature category-detail-page
+ */
+
 import { z } from "zod";
 
 import {
@@ -56,6 +64,12 @@ export function toNewTransaction(
   const { amount, ...rest } = input;
   return { ...rest, amountCents: Math.round(amount * 100) };
 }
+
+/** Validates a raw string as a known Category. Used at the `/categories/[category]` route boundary. */
+export const categorySchema = z.union([
+  z.enum(INCOME_CATEGORIES),
+  z.enum(EXPENSE_CATEGORIES),
+]);
 
 export const listFiltersSchema = z.object({
   type: z.enum(["income", "expense"]).optional(),

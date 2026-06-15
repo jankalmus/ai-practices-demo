@@ -1,3 +1,11 @@
+/**
+ * @file lib/aggregate.ts
+ * @model claude-sonnet-4-6
+ * @description Pure aggregation and formatting utilities for transaction data.
+ * @feature category-detail-page
+ * @updated 2026-06-15
+ */
+
 import type { Category } from "./categories";
 import type { Transaction } from "./schemas";
 
@@ -88,4 +96,42 @@ export function formatDate(date: string): string {
     day: "numeric",
     month: "short",
   });
+}
+
+export type CategoryStats = {
+  avgFrequencyPerMonth: number; // total txns / distinct months
+  avgAmountCents: number; // mean of amountCents, rounded to whole cents
+  lastDate: string; // most recent date (YYYY-MM-DD)
+  minTx: { name: string; amountCents: number };
+  maxTx: { name: string; amountCents: number };
+};
+
+/** Computes all-time stats for a set of transactions belonging to one category.
+ *  Order-independent: derives `lastDate` via string comparison rather than
+ *  relying on the caller to have sorted the array.
+ *  Returns null when the array is empty.
+ */
+export function categoryStats(transactions: Transaction[]): CategoryStats | null {
+  if (transactions.length === 0) return null;
+  const distinctMonths = new Set(transactions.map((tx) => tx.date.slice(0, 7))).size;
+  const avgFrequencyPerMonth = transactions.length / distinctMonths;
+  const avgAmountCents = Math.round(
+    transactions.reduce((sum, tx) => sum + tx.amountCents, 0) / transactions.length,
+  );
+  let lastDate = transactions[0].date;
+  let minTx = transactions[0];
+  let maxTx = transactions[0];
+  for (const tx of transactions) {
+    // YYYY-MM-DD strings sort lexicographically, so > finds the most recent.
+    if (tx.date > lastDate) lastDate = tx.date;
+    if (tx.amountCents < minTx.amountCents) minTx = tx;
+    if (tx.amountCents > maxTx.amountCents) maxTx = tx;
+  }
+  return {
+    avgFrequencyPerMonth,
+    avgAmountCents,
+    lastDate,
+    minTx: { name: minTx.name, amountCents: minTx.amountCents },
+    maxTx: { name: maxTx.name, amountCents: maxTx.amountCents },
+  };
 }
