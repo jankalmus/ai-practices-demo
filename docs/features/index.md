@@ -8,4 +8,4 @@ Each doc is authored and kept current by the `document` skill, rendered from a s
 
 | Feature | Slug | Status | Document |
 | --- | --- | --- | --- |
-| _No features documented yet._ | | | |
+| Category Detail Page | `category-detail-page` | active | [category-detail-page.md](./category-detail-page.md) |

@@ -1,3 +1,11 @@
+/**
+ * @file app/page.tsx
+ * @updated 2026-06-16
+ * @model claude-sonnet-4-6
+ * @description Home dashboard — monthly transaction overview with summary cards, transaction list, category breakdown, and add form.
+ * @feature none
+ */
+
 import Link from "next/link";
 
 import { CategoryBreakdown } from "@/components/category-breakdown";
@@ -117,7 +125,7 @@ export default async function Home({
             />
           </div>
           <div className="space-y-6">
-            <CategoryBreakdown transactions={monthTransactions} />
+            <CategoryBreakdown transactions={monthTransactions} month={month} />
             <TransactionForm defaultDate={todayIsoDate()} />
           </div>
         </div>
