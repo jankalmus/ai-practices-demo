@@ -1,0 +1,30 @@
+{
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "features": {
+        "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
+        "ghcr.io/devcontainers/features/node:2.0.0": {
+            "version": "22",
+            "pnpmVersion": "10"
+        },
+        "ghcr.io/devcontainers/features/github-cli:1": {}
+    },
+    "remoteEnv": {
+        "PODMAN_USERNS": "keep-id"
+    },
+    "containerEnv": {
+        "CLAUDE_CONFIG_DIR": "/home/vscode/.claude"
+    },
+    "mounts": [
+        "source=claude-code-config,target=/home/vscode/.claude,type=volume",
+        "source=gh-cli-config,target=/home/vscode/.config/gh,type=volume",
+        "source=${localWorkspaceFolderBasename}-node-modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
+    ],
+    "forwardPorts": [3000],
+    "portsAttributes": {
+        "3000": {
+            "label": "Next.js dev server"
+        }
+    },
+    "containerUser": "vscode",
+    "postCreateCommand": "sudo chown -R vscode:vscode node_modules /home/vscode/.config/gh && pnpm install && git config --global core.autocrlf true"
+}

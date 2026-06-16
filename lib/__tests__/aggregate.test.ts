@@ -1,8 +1,17 @@
+/**
+ * @file lib/__tests__/aggregate.test.ts
+ * @model claude-sonnet-4-6
+ * @description Unit tests for aggregate helpers.
+ * @feature Core data layer
+ * @updated 2026-06-16
+ */
+
 import { describe, expect, it } from "vitest";
 
 import {
   availableMonths,
   byCategory,
+  categoryStats,
   formatCents,
   formatDate,
   monthLabel,
@@ -62,6 +71,39 @@ describe("byCategory", () => {
 describe("availableMonths", () => {
   it("returns distinct months, newest first", () => {
     expect(availableMonths(fixture)).toEqual(["2026-06", "2026-05", "2026-04"]);
+  });
+});
+
+describe("categoryStats", () => {
+  const foodTxs = fixture.filter((tx) => tx.category === "Food");
+
+  it("returns nulls and zero for an empty list", () => {
+    expect(categoryStats([])).toEqual({
+      lastDate: null,
+      averageCents: 0,
+      largestTx: null,
+      smallestTx: null,
+    });
+  });
+
+  it("identifies the most recent date", () => {
+    expect(categoryStats(foodTxs).lastDate).toBe("2026-06-13");
+  });
+
+  it("rounds the average to whole cents", () => {
+    // (7500 + 8200) / 2 = 7850
+    expect(categoryStats(foodTxs).averageCents).toBe(7_850);
+  });
+
+  it("picks the smallest and largest by amountCents", () => {
+    const stats = categoryStats(foodTxs);
+    expect(stats.smallestTx?.id).toBe("t3");
+    expect(stats.largestTx?.id).toBe("t4");
+  });
+
+  it("returns the same tx for both extremes when there is only one transaction", () => {
+    const stats = categoryStats([fixture[1]!]);
+    expect(stats.smallestTx?.id).toBe(stats.largestTx?.id);
   });
 });
 

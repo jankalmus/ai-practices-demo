@@ -1,3 +1,11 @@
+/**
+ * @file lib/aggregate.ts
+ * @model claude-sonnet-4-6
+ * @description Pure aggregation helpers over Transaction arrays — summaries, breakdowns, and formatters.
+ * @feature Core data layer
+ * @updated 2026-06-16
+ */
+
 import type { Category } from "./categories";
 import type { Transaction } from "./schemas";
 
@@ -88,4 +96,32 @@ export function formatDate(date: string): string {
     day: "numeric",
     month: "short",
   });
+}
+
+export type CategoryStats = {
+  lastDate: string | null;
+  averageCents: number;
+  largestTx: Transaction | null;
+  smallestTx: Transaction | null;
+};
+
+/** Computes all-time stats for a pre-filtered array of transactions from a single category. */
+export function categoryStats(transactions: Transaction[]): CategoryStats {
+  if (transactions.length === 0) {
+    return { lastDate: null, averageCents: 0, largestTx: null, smallestTx: null };
+  }
+  const lastDate = transactions.reduce(
+    (latest, tx) => (tx.date > latest ? tx.date : latest),
+    transactions[0].date,
+  );
+  const averageCents = Math.round(
+    transactions.reduce((sum, tx) => sum + tx.amountCents, 0) / transactions.length,
+  );
+  const byAmount = [...transactions].sort((a, b) => a.amountCents - b.amountCents);
+  return {
+    lastDate,
+    averageCents,
+    smallestTx: byAmount[0],
+    largestTx: byAmount[byAmount.length - 1],
+  };
 }

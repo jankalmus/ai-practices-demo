@@ -1,3 +1,11 @@
+/**
+ * @file lib/schemas.ts
+ * @model claude-sonnet-4-6
+ * @description Zod schemas and derived TypeScript types for all external input boundaries.
+ * @feature Core data layer
+ * @updated 2026-06-16
+ */
+
 import { z } from "zod";
 
 import {
@@ -69,3 +77,6 @@ export const listFiltersSchema = z.object({
 });
 
 export type ListFilters = z.infer<typeof listFiltersSchema>;
+
+/** Validates the `[category]` path segment for the category detail page. */
+export const expenseCategoryParamSchema = z.enum(EXPENSE_CATEGORIES);

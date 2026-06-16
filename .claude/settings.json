@@ -1,7 +1,80 @@
 {
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/bash-check.mjs\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|Update",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/ts-header-check.mjs\""
+          }
+        ]
+      }
+    ]
+  },
   "permissions": {
+    "allow": [
+      "Bash(pnpm build:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm test:*)",
+      "Bash(git diff:*)",
+      "Bash(git status:*)",
+      "Bash(git log:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr diff:*)"
+    ],
     "deny": [
-      "PowerShell(**)"
+      "PowerShell(**)",
+
+      "Read(./**/.env)",
+      "Read(./**/.env.local)",
+      "Read(./**/.env.*.local)",
+      "Read(./**/.env.development)",
+      "Read(./**/.env.production)",
+      "Read(./**/.env.staging)",
+      "Read(./**/.env.test)",
+
+      "Read(./**/*.pem)",
+      "Read(./**/*.key)",
+      "Read(./**/*.p12)",
+      "Read(./**/*.pfx)",
+      "Read(./**/id_rsa*)",
+      "Read(./**/id_ed25519*)",
+
+      "Read(./**/*.tfstate)",
+      "Read(./**/*.tfstate.*)",
+      "Read(./**/*.tfvars)",
+      "Read(./**/.git-credentials)",
+      "Read(./**/.netrc)",
+      "Read(./secrets/**)",
+
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.azure/**)",
+      "Read(~/.kube/**)",
+      "Read(~/.config/gcloud/**)",
+
+      "Edit(./**/.env)",
+      "Edit(./**/.env.local)",
+      "Edit(./**/.env.*.local)",
+      "Edit(./**/.env.development)",
+      "Edit(./**/.env.production)",
+      "Edit(./**/.env.staging)",
+      "Edit(./**/.env.test)",
+      "Edit(./**/*.pem)",
+      "Edit(./**/*.key)",
+      "Edit(./secrets/**)"
     ]
   }
 }
